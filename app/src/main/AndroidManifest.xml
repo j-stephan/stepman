@@ -19,4 +19,8 @@
         <activity android:name=".StepCountHiActivity"></activity>
     </application>
 
+    <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="true"/>
+    <uses-feature android:name="android.hardware.location.gps" android:required="true" />
+    <uses-feature android:name="android.hardware.location" android:required="true" />
+
 </manifest>
