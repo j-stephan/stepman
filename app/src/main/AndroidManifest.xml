@@ -15,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StepWidthActivity" />
+        <activity android:name=".StepLengthActivity" />
         <activity android:name=".StepCountHiActivity"></activity>
     </application>
 
