@@ -10,16 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="368591c1-94eb-4a93-b962-fd09010268fb" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/StepMan.iml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/stepman.iml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_23_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_23_1_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gradlew.bat" afterPath="$PROJECT_DIR$/gradlew.bat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_23_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_23_1_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_23_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_23_1_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCountActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCountActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCounter.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCounter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="StepMan.iws" />
@@ -63,9 +55,21 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCountActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
+<<<<<<< HEAD
               <caret line="38" column="99" selection-start-line="38" selection-start-column="99" selection-end-line="38" selection-end-column="99" />
               <folding>
                 <element signature="imports" expanded="true" />
+=======
+              <caret line="21" column="93" selection-start-line="21" selection-start-column="93" selection-end-line="21" selection-end-column="93" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#649#690#0" expanded="true" />
+                <element signature="e#804#925#0" expanded="true" />
+                <element signature="e#924#925#0" expanded="true" />
+                <element signature="e#1000#1377#0" expanded="true" />
+                <element signature="e#1288#1313#0" expanded="true" />
+                <element signature="e#1376#1377#0" expanded="true" />
+>>>>>>> 350917d85ff68fb09a63a50540d1c7a1b3523603
               </folding>
             </state>
           </provider>
@@ -107,9 +111,22 @@
       <file leaf-file-name="StepCounter.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCounter.java">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state vertical-scroll-proportion="0.45918366">
               <caret line="51" column="9" selection-start-line="51" selection-start-column="9" selection-end-line="51" selection-end-column="9" />
               <folding />
+=======
+            <state vertical-scroll-proportion="-0.15873016">
+              <caret line="51" column="44" selection-start-line="51" selection-start-column="44" selection-end-line="51" selection-end-column="44" />
+              <folding>
+                <element signature="e#910#911#0" expanded="true" />
+                <element signature="e#944#945#0" expanded="true" />
+                <element signature="e#1683#1684#0" expanded="true" />
+                <element signature="e#1737#1738#0" expanded="true" />
+                <element signature="e#1766#1767#0" expanded="true" />
+                <element signature="e#1794#1795#0" expanded="true" />
+              </folding>
+>>>>>>> 350917d85ff68fb09a63a50540d1c7a1b3523603
             </state>
           </provider>
         </entry>
@@ -1585,8 +1602,8 @@
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_step_count.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCounter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCountActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCounter.java" />
       </list>
     </option>
   </component>
@@ -1880,6 +1897,13 @@
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+<<<<<<< HEAD
+=======
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3294702" sideWeight="0.4939577" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930514" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+>>>>>>> 350917d85ff68fb09a63a50540d1c7a1b3523603
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1931,6 +1955,15 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+<<<<<<< HEAD
+=======
+            <element signature="e#649#690#0" expanded="true" />
+            <element signature="e#804#925#0" expanded="true" />
+            <element signature="e#924#925#0" expanded="true" />
+            <element signature="e#1000#1377#0" expanded="true" />
+            <element signature="e#1288#1313#0" expanded="true" />
+            <element signature="e#1376#1377#0" expanded="true" />
+>>>>>>> 350917d85ff68fb09a63a50540d1c7a1b3523603
           </folding>
         </state>
       </provider>
@@ -2124,18 +2157,43 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCountActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+<<<<<<< HEAD
           <caret line="38" column="99" selection-start-line="38" selection-start-column="99" selection-end-line="38" selection-end-column="99" />
           <folding>
             <element signature="imports" expanded="true" />
+=======
+          <caret line="21" column="93" selection-start-line="21" selection-start-column="93" selection-end-line="21" selection-end-column="93" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#649#690#0" expanded="true" />
+            <element signature="e#804#925#0" expanded="true" />
+            <element signature="e#924#925#0" expanded="true" />
+            <element signature="e#1000#1377#0" expanded="true" />
+            <element signature="e#1288#1313#0" expanded="true" />
+            <element signature="e#1376#1377#0" expanded="true" />
+>>>>>>> 350917d85ff68fb09a63a50540d1c7a1b3523603
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/de/tu_dresden/carebears/stepman/StepCounter.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state vertical-scroll-proportion="0.45918366">
           <caret line="51" column="9" selection-start-line="51" selection-start-column="9" selection-end-line="51" selection-end-column="9" />
           <folding />
+=======
+        <state vertical-scroll-proportion="-0.15873016">
+          <caret line="51" column="44" selection-start-line="51" selection-start-column="44" selection-end-line="51" selection-end-column="44" />
+          <folding>
+            <element signature="e#910#911#0" expanded="true" />
+            <element signature="e#944#945#0" expanded="true" />
+            <element signature="e#1683#1684#0" expanded="true" />
+            <element signature="e#1737#1738#0" expanded="true" />
+            <element signature="e#1766#1767#0" expanded="true" />
+            <element signature="e#1794#1795#0" expanded="true" />
+          </folding>
+>>>>>>> 350917d85ff68fb09a63a50540d1c7a1b3523603
         </state>
       </provider>
     </entry>

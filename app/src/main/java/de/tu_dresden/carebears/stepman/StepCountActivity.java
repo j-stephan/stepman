@@ -19,7 +19,7 @@ public class StepCountActivity extends AppCompatActivity {
 
         this.counter = StepCounter.getInstance(this);
         if(!counter.initialize()) {
-            Toast.makeText(this, getString(R.string.init_step_sensor_fail), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.init_step_sensor_fail), Toast.LENGTH_LONG).show();
         }
 
         this.updateTimer = new Timer();
