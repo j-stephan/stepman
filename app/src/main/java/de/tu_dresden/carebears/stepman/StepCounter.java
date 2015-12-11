@@ -19,6 +19,7 @@ public class StepCounter {
     private StepListener stepListener;
 
     private boolean initialized;
+    private boolean firstSteps;
     private int steps;
     private int initialSteps;
 
@@ -45,11 +46,12 @@ public class StepCounter {
         stepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         this.stepListener = new StepListener();
 
+        this.firstSteps = true;
+
         if (stepCounter != null) {
             if(!mSensorManager.registerListener(stepListener,stepCounter,  SensorManager.SENSOR_DELAY_NORMAL)) {
                 return false;
             }
-            this.initialSteps = stepCounter.
             return true;
         }
 
@@ -71,7 +73,7 @@ public class StepCounter {
     }
 
     public void reset() {
-        initialSteps = steps;
+        initialSteps += steps;
         steps = 0;
     }
 
@@ -79,6 +81,10 @@ public class StepCounter {
 
         @Override
         public void onSensorChanged(SensorEvent event) {
+            if(firstSteps){
+                initialSteps = Math.round(event.values[0]);
+                firstSteps = false;
+            }
             instance.setSteps(Math.round(event.values[0]));
         }
 
