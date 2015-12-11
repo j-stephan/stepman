@@ -11,9 +11,12 @@ public class StepCountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_step_count);
 
         StepCounter counter = StepCounter.getInstance(this);
+        if(!counter.initialize()) {
+            //warn
+        }
 
-        //if(!mSensorManager.registerListener(stepCounterListener,stepCounter,10)) {
-            // warn
-        //}
+
+
+
     }
 }

@@ -2,6 +2,8 @@ package de.tu_dresden.carebears.stepman;
 
 import android.content.Context;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 /**
@@ -13,17 +15,65 @@ public class StepCounter {
 
     private SensorManager mSensorManager;
     private Sensor stepCounter;
-    private Context ctx;
+    private Context context;
+    private StepListener stepListener;
+
+    private boolean initialized;
+    private int steps;
 
     private StepCounter(Context ctx) {
-        mSensorManager = (SensorManager) ctx.getSystemService(Context.SENSOR_SERVICE);
-        stepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        this.context = ctx;
+        this.initialized = false;
     }
 
     public static StepCounter getInstance(Context ctx) {
-        if(instance == null)
+        if(instance == null) {
             instance = new StepCounter(ctx);
+        }
 
         return instance;
+    }
+
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    public boolean initialize() {
+        mSensorManager = (SensorManager) this.context.getSystemService(Context.SENSOR_SERVICE);
+        stepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        this.stepListener = new StepListener();
+
+        if (stepCounter != null) {
+            if(!mSensorManager.registerListener(stepListener,stepCounter,  SensorManager.SENSOR_DELAY_NORMAL)) {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    public void close() {
+        mSensorManager.unregisterListener(stepListener);
+    }
+
+    private void addSteps(int steps){
+        this.steps += steps;
+    }
+
+    public int getSteps() {
+        return steps;
+    }
+
+    private class StepListener implements SensorEventListener {
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            instance.addSteps(Math.round(event.values[0]));
+            }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
     }
 }
