@@ -5,4 +5,6 @@
     <string name="distance">Distance</string>
     <string name="high_score">High Score</string>
     <string name="init_step_sensor_fail">Initializing the Step Sensor failed</string>
+    <string name="location_providers_offline">Your location providers are disabled</string>
+    <string name="missing_location_permission">StepMan is missing permissions for the location service</string>
 </resources>

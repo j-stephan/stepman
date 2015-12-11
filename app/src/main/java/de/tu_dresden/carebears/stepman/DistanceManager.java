@@ -38,9 +38,9 @@ public class DistanceManager {
         return instance;
     }
 
-    public boolean initialize() {
+    public void initialize() throws ProviderException, PermissionException {
         if(initialized)
-            return true;
+            return;
 
         manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
@@ -48,7 +48,7 @@ public class DistanceManager {
         boolean networkEnabled = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
         if(!(gpsEnabled || networkEnabled))
-            return false;
+            throw new ProviderException(context.getString(R.string.location_providers_offline));
 
         listener = new LocationListener() {
             @Override
@@ -77,12 +77,10 @@ public class DistanceManager {
         provider = manager.getBestProvider(criteria, true);
 
         if(context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED)
-            return false;
+            throw new PermissionException(context.getString(R.string.missing_location_permission));
 
         manager.requestLocationUpdates(provider, 0, 0, listener);
         lastLocation = manager.getLastKnownLocation(provider);
-
-        return true;
     }
 
     float getDistance() {
