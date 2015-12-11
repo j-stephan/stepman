@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">StepMan</string>
-    <string name="steps">steps</string>
-    <string name="step_length">step length</string>
-    <string name="distance">distance</string>
+    <string name="steps">Steps</string>
+    <string name="step_length">Step Length</string>
+    <string name="distance">Distance</string>
+    <string name="high_score">High Score</string>
 </resources>
