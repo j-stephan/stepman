@@ -23,6 +23,7 @@ public class StepCounter {
 
     private StepCounter(Context ctx) {
         this.context = ctx;
+        this.steps = 0;
         this.initialized = false;
     }
 
@@ -47,6 +48,7 @@ public class StepCounter {
             if(!mSensorManager.registerListener(stepListener,stepCounter,  SensorManager.SENSOR_DELAY_NORMAL)) {
                 return false;
             }
+            return true;
         }
 
         return false;
@@ -54,6 +56,8 @@ public class StepCounter {
 
     public void close() {
         mSensorManager.unregisterListener(stepListener);
+        steps = 0;
+        initialized = false;
     }
 
     private void addSteps(int steps){
@@ -64,12 +68,16 @@ public class StepCounter {
         return steps;
     }
 
+    public void reset() {
+        steps = 0;
+    }
+
     private class StepListener implements SensorEventListener {
 
         @Override
         public void onSensorChanged(SensorEvent event) {
             instance.addSteps(Math.round(event.values[0]));
-            }
+        }
 
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
