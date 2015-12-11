@@ -34,17 +34,39 @@ public class StepCountActivity extends AppCompatActivity {
 
     private void update() {
         this.runOnUiThread(new Runnable() {
-                               @Override
-                               public void run() {
-                                   TextView stepText = (TextView) findViewById(R.id.textStepCount);
-                                   stepText.setText(counter.getSteps() + " " + getString(R.string.steps));
-                               }
-                           });
+            @Override
+            public void run() {
+                TextView stepText = (TextView) findViewById(R.id.textStepCount);
+                stepText.setText(counter.getSteps() + " " + getString(R.string.steps));
+            }
+        });
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
         counter.close();
+    }
+
+    protected void onPause(){
+        super.onPause();
+    }
+
+    protected void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    protected  void onSaveInstanceState(Bundle state)	{
+        super.onSaveInstanceState(state);
+
+        //state.putFloat("Distance", distanceManager.getDistance());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+
+        //distanceManager.setDistance(state.getFloat("Distance"));
     }
 }
