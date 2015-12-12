@@ -10,6 +10,7 @@ import java.util.TimerTask;
 
 public class StepCountActivity extends AppCompatActivity {
     private StepCounter counter;
+    private DistanceManager distanceManager;
     private Timer updateTimer;
 
     @Override
@@ -19,7 +20,12 @@ public class StepCountActivity extends AppCompatActivity {
 
         this.counter = StepCounter.getInstance(this);
         if(!counter.initialize()) {
-            Toast.makeText(this, getString(R.string.init_step_sensor_fail), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, counter.getStatusMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        this.distanceManager = DistanceManager.getInstance(this);
+        if(!distanceManager.initialize()){
+            Toast.makeText(this, distanceManager.getStatusMessage(), Toast.LENGTH_LONG).show();
         }
 
         this.updateTimer = new Timer();
@@ -37,7 +43,7 @@ public class StepCountActivity extends AppCompatActivity {
             @Override
             public void run() {
                 TextView stepText = (TextView) findViewById(R.id.textStepCount);
-                stepText.setText(counter.getSteps() + " " + getString(R.string.steps));
+                stepText.setText((int) counter.getData() + " " + getString(R.string.steps));
             }
         });
     }

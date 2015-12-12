@@ -13,6 +13,6 @@ public class StepLengthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_length);
 
-        distanceManager = DistanceManager.getInstance();
+        distanceManager = DistanceManager.getInstance(this);
     }
 }

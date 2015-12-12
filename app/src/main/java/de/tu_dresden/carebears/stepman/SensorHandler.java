@@ -11,6 +11,6 @@ public interface SensorHandler {
     public void reset();
 
     public String getStatusMessage();
-    public int getData();
+    public float getData();
 
 }

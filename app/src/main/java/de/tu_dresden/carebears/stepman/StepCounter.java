@@ -73,7 +73,7 @@ public class StepCounter implements SensorHandler{
         this.steps = steps - this.initialSteps;
     }
 
-    public int getData() {
+    public float getData() {
         return steps;
     }
 

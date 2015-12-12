@@ -11,7 +11,7 @@ import android.os.Bundle;
 /**
  * Created by jan on 11.12.15.
  */
-public class DistanceManager {
+public class DistanceManager implements SensorHandler{
 
     private static DistanceManager instance;
     private Context context;
@@ -21,14 +21,17 @@ public class DistanceManager {
     private String provider;
 
     private boolean initialized;
+    private String status;
 
     private Location lastLocation;
     private float distance;
     private long timeBetween;
 
     private DistanceManager(Context ctx) {
-        context = ctx;
-        initialized = false;
+        this.context = ctx;
+        this.initialized = false;
+        this.distance = 0;
+        this.status = ctx.getString(R.string.sensor_not_initialized);
     }
 
     public static DistanceManager getInstance(Context ctx) {
@@ -38,22 +41,25 @@ public class DistanceManager {
         return instance;
     }
 
-    public void initialize() throws ProviderException, PermissionException {
-        if(initialized)
-            return;
+    public boolean initialize() {
+        if(initialized) {
+            return true;
+        }
 
         manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         boolean gpsEnabled = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean networkEnabled = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-        if(!(gpsEnabled || networkEnabled))
-            throw new ProviderException(context.getString(R.string.location_providers_offline));
+        if(!(gpsEnabled || networkEnabled)) {
+            status = context.getString(R.string.location_providers_offline);
+            return false;
+        }
 
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                distance = location.distanceTo(lastLocation);
+                distance += location.distanceTo(lastLocation);
                 timeBetween = location.getTime() - lastLocation.getTime();
                 lastLocation = location;
             }
@@ -73,21 +79,46 @@ public class DistanceManager {
         };
 
         Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
         provider = manager.getBestProvider(criteria, true);
 
-        if(context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED)
-            throw new PermissionException(context.getString(R.string.missing_location_permission));
+        if(context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
+            status = context.getString(R.string.missing_location_permission);
+            return false;
+        }
 
         manager.requestLocationUpdates(provider, 0, 0, listener);
         lastLocation = manager.getLastKnownLocation(provider);
+
+        status = context.getString(R.string.sensor_initialized);
+        return true;
     }
 
-    float getDistance() {
+    @Override
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    @Override
+    public void close() {
+
+    }
+
+    @Override
+    public void reset() {
+        distance = 0;
+    }
+
+    @Override
+    public String getStatusMessage() {
+        return status;
+    }
+
+    public float getData() {
         return distance;
     }
 
-    long getTimeBetween() {
+    public long getTimeBetween() {
         return timeBetween;
     }
 }
