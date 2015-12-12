@@ -1,10 +1,16 @@
 <resources>
     <string name="app_name">StepMan</string>
+
+    // Strings shown in the UI
     <string name="steps">Steps</string>
     <string name="step_length">Step Length</string>
     <string name="distance">Distance</string>
     <string name="high_score">High Score</string>
+
+    // Strings for Sensor status
     <string name="init_step_sensor_fail">Initializing the Step Sensor failed</string>
     <string name="location_providers_offline">Your location providers are disabled</string>
     <string name="missing_location_permission">StepMan is missing permissions for the location service</string>
+    <string name="sensor_initialized">Sensor initialized</string>
+    <string name="sensor_not_initialized">Sensor not initialized</string>
 </resources>
