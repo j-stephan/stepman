@@ -91,6 +91,7 @@ public class DistanceManager implements SensorHandler{
         lastLocation = manager.getLastKnownLocation(provider);
 
         status = context.getString(R.string.sensor_initialized);
+        initialized = true;
         return true;
     }
 
@@ -120,5 +121,9 @@ public class DistanceManager implements SensorHandler{
 
     public long getTimeBetween() {
         return timeBetween;
+    }
+
+    public void setDistance(float distance){
+        this.distance = distance;
     }
 }

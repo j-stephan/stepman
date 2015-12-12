@@ -12,9 +12,13 @@ public class StepCountActivity extends AppCompatActivity {
     private StepCounter counter;
     private DistanceManager distanceManager;
     private Timer updateTimer;
+    private boolean initialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(initialized) {
+            return;
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_count);
 
@@ -36,6 +40,8 @@ public class StepCountActivity extends AppCompatActivity {
             }
         }, 0, 1000);
 
+        initialized = true;
+
     }
 
     private void update() {
@@ -51,7 +57,10 @@ public class StepCountActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        counter.close();
+        if(isFinishing()) {
+            counter.close();
+            distanceManager.close();
+        }
     }
 
     protected void onPause(){
@@ -66,13 +75,19 @@ public class StepCountActivity extends AppCompatActivity {
     protected  void onSaveInstanceState(Bundle state)	{
         super.onSaveInstanceState(state);
 
-        //state.putFloat("Distance", distanceManager.getDistance());
+        state.putFloat("Distance", distanceManager.getData());
+        state.putInt("InitialSteps", counter.getInitialSteps());
+        state.putBoolean("FirstSteps", counter.getFirstSteps());
+        state.putBoolean("Initialized", this.initialized);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
 
-        //distanceManager.setDistance(state.getFloat("Distance"));
+        distanceManager.setDistance(state.getFloat("Distance"));
+        counter.setInitialSteps(state.getInt("InitialSteps"));
+        this.initialized = state.getBoolean("Initialized");
+        counter.setFirstSteps(state.getBoolean("FirstSteps"));
     }
 }

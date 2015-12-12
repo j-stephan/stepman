@@ -56,6 +56,7 @@ public class StepCounter implements SensorHandler{
                 return false;
             }
             status = context.getString(R.string.sensor_initialized);
+            this.initialized = true;
             return true;
         }
 
@@ -102,5 +103,21 @@ public class StepCounter implements SensorHandler{
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
         }
+    }
+
+    public int getInitialSteps() {
+        return initialSteps;
+    }
+
+    public void setInitialSteps(int initialSteps) {
+        this.initialSteps = initialSteps;
+    }
+
+    public boolean getFirstSteps(){
+        return firstSteps;
+    }
+
+    public void setFirstSteps(boolean firstSteps) {
+        this.firstSteps = firstSteps;
     }
 }
