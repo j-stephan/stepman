@@ -9,7 +9,7 @@ import android.hardware.SensorManager;
 /**
  * Created by jan on 09.12.15.
  */
-public class StepCounter {
+public class StepCounter implements SensorHandler{
 
     private static StepCounter instance;
 
@@ -22,11 +22,13 @@ public class StepCounter {
     private boolean firstSteps;
     private int steps;
     private int initialSteps;
+    private String status;
 
     private StepCounter(Context ctx) {
         this.context = ctx;
         this.steps = 0;
         this.initialized = false;
+        this.status = ctx.getString(R.string.sensor_not_initialized);
     }
 
     public static StepCounter getInstance(Context ctx) {
@@ -50,11 +52,14 @@ public class StepCounter {
 
         if (stepCounter != null) {
             if(!mSensorManager.registerListener(stepListener,stepCounter,  SensorManager.SENSOR_DELAY_NORMAL)) {
+                status = context.getString(R.string.init_step_sensor_fail);
                 return false;
             }
+            status = context.getString(R.string.sensor_initialized);
             return true;
         }
 
+        status = context.getString(R.string.init_step_sensor_fail);
         return false;
     }
 
@@ -68,13 +73,18 @@ public class StepCounter {
         this.steps = steps - this.initialSteps;
     }
 
-    public int getSteps() {
+    public int getData() {
         return steps;
     }
 
     public void reset() {
         initialSteps += steps;
         steps = 0;
+    }
+
+    @Override
+    public String getStatusMessage() {
+        return status;
     }
 
     private class StepListener implements SensorEventListener {
