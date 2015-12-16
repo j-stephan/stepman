@@ -6,6 +6,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 
 /**
@@ -18,7 +19,8 @@ public class DistanceManager implements SensorHandler{
 
     private LocationManager manager;
     private LocationListener listener;
-    private String provider;
+    private LocationProvider provider;
+    private String providerString;
 
     private boolean initialized;
     private String status;
@@ -80,15 +82,16 @@ public class DistanceManager implements SensorHandler{
 
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        provider = manager.getBestProvider(criteria, true);
+        providerString = manager.getBestProvider(criteria, true);
 
         if(context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
             status = context.getString(R.string.missing_location_permission);
             return false;
         }
 
-        manager.requestLocationUpdates(provider, 0, 0, listener);
-        lastLocation = manager.getLastKnownLocation(provider);
+        provider = manager.getProvider(providerString);
+        manager.requestLocationUpdates(providerString, 0, 0, listener);
+        lastLocation = manager.getLastKnownLocation(providerString);
 
         status = context.getString(R.string.sensor_initialized);
         initialized = true;
@@ -102,12 +105,18 @@ public class DistanceManager implements SensorHandler{
 
     @Override
     public void close() {
-
+        if(!initialized)
+            return;
+        if(context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED)
+            manager.removeUpdates(listener);
+        distance = 0.f;
+        initialized = false;
     }
 
     @Override
     public void reset() {
-        distance = 0;
+        close();
+        initialize();
     }
 
     @Override

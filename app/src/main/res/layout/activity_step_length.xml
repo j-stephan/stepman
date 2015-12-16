@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="High Score"
-        android:id="@+id/buttonHiStepWidth"
+        android:id="@+id/buttonHiStepLength"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:text="Step Count"
         android:id="@+id/buttonSwitchToCount"
-        android:layout_alignTop="@+id/buttonHiStepWidth"
+        android:layout_alignTop="@+id/buttonHiStepLength"
         android:layout_alignParentEnd="true" />
 
     <TextView
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Step Length"
-        android:id="@+id/textStepWidth"
+        android:id="@+id/textStepLength"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

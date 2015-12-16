@@ -1,5 +1,6 @@
 package de.tu_dresden.carebears.stepman;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.util.TimerTask;
 
 public class StepCountActivity extends AppCompatActivity {
     private Button resetButton;
+    private Button lengthButton;
     private StepCounter counter;
     private DistanceManager distanceManager;
     private Timer updateTimer;
@@ -51,6 +53,15 @@ public class StepCountActivity extends AppCompatActivity {
             public void onClick(View v) {
                 counter.reset();
                 distanceManager.reset();
+            }
+        });
+
+        lengthButton = (Button) findViewById(R.id.buttonSwitchToLength);
+        lengthButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), StepLengthActivity.class);
+                startActivity(i);
             }
         });
 
