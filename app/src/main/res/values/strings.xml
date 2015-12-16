@@ -6,6 +6,7 @@
     <string name="step_length">Step Length</string>
     <string name="distance">Distance</string>
     <string name="high_score">High Score</string>
+    <string name="reset">Reset</string>
 
     // Strings for Sensor status
     <string name="init_step_sensor_fail">Initializing the Step Sensor failed</string>
