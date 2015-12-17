@@ -1,5 +1,7 @@
 package de.tu_dresden.carebears.stepman;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.Timer;
@@ -22,6 +23,9 @@ public class StepCountActivity extends AppCompatActivity {
     private ToggleButton onOffButton;
     private StepCounter counter;
     private DistanceManager distanceManager;
+    private Boolean counterServiceRunning;
+    private Boolean distanceServiceRunning;
+    private Boolean servicesBound = false;
     private Timer updateTimer;
     private boolean initialized = false;
 
@@ -32,14 +36,6 @@ public class StepCountActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_count);
-
-        Intent stepIntent = new Intent(this, StepCounter.class);
-        startService(stepIntent);
-        bindService(stepIntent, StepCounterCallback, Context.BIND_AUTO_CREATE);
-
-        Intent distanceIntent = new Intent(this, DistanceManager.class);
-        startService(distanceIntent);
-        bindService(distanceIntent, DistanceManagerCallback, Context.BIND_AUTO_CREATE);
 
         this.updateTimer = new Timer();
         this.updateTimer.schedule(new TimerTask() {
@@ -60,19 +56,69 @@ public class StepCountActivity extends AppCompatActivity {
             }
         });
 
+        distanceServiceRunning = isMyServiceRunning(DistanceManager.class);
+        counterServiceRunning = isMyServiceRunning(StepCounter.class);
+
+        if((distanceServiceRunning & counterServiceRunning) & !servicesBound){
+            Intent distanceIntent = new Intent(this, DistanceManager.class);
+            bindService(distanceIntent, DistanceManagerCallback, Context.BIND_AUTO_CREATE);
+            Intent stepIntent = new Intent(this, StepCounter.class);
+            bindService(stepIntent, StepCounterCallback, Context.BIND_AUTO_CREATE);
+        }
+
         this.onOffButton = (ToggleButton) findViewById(R.id.onOffButton);
+        if(distanceServiceRunning && counterServiceRunning){
+            onOffButton.setChecked(true);
+        } else {
+            onOffButton.setChecked(false);
+        }
         onOffButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(StepCountActivity.this, "button checked: " + onOffButton.isChecked(), Toast.LENGTH_SHORT).show();
+                updateServiceStatus();
             }
         });
+    }
+
+    private void updateServiceStatus() {
+        if(!(distanceServiceRunning & counterServiceRunning)){
+            if(!distanceServiceRunning) {
+                Intent distanceIntent = new Intent(this, DistanceManager.class);
+                startService(distanceIntent);
+                bindService(distanceIntent, DistanceManagerCallback, Context.BIND_AUTO_CREATE);
+                distanceServiceRunning = true;
+            }
+            if(!counterServiceRunning){
+                Intent stepIntent = new Intent(this, StepCounter.class);
+                startService(stepIntent);
+                bindService(stepIntent, StepCounterCallback, Context.BIND_AUTO_CREATE);
+                counterServiceRunning = true;
+            }
+            onOffButton.setChecked(true);
+        } else {
+            if(distanceServiceRunning){
+                unbindService(DistanceManagerCallback);
+                stopService(new Intent(this, DistanceManager.class));
+                distanceServiceRunning = false;
+            }
+            if(counterServiceRunning){
+                unbindService(StepCounterCallback);
+                stopService(new Intent(this, StepCounter.class));
+                counterServiceRunning = false;
+            }
+            onOffButton.setChecked(false);
+        }
     }
 
     private void update() {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(!onOffButton.isChecked()) {
+                    TextView text = (TextView) findViewById(R.id.text);
+                    text.setText(getString(R.string.services_not_running));
+                    return;
+                }
                 if (distanceManager != null && counter != null) {
                     TextView text = (TextView) findViewById(R.id.text);
                     text.setText(getString(R.string.distance) + ":\t" + distanceManager.getData() + " m\n" +
@@ -87,8 +133,8 @@ public class StepCountActivity extends AppCompatActivity {
     protected void onDestroy(){
         super.onDestroy();
         if(isFinishing()) {
-            counter.close();
-            distanceManager.close();
+            unbindService(DistanceManagerCallback);
+            unbindService(StepCounterCallback);
         }
     }
 
@@ -137,4 +183,14 @@ public class StepCountActivity extends AppCompatActivity {
 
         }
     };
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

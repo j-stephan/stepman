@@ -158,6 +158,11 @@ public class DistanceManager extends Service implements SensorHandler {
         return START_FLAG_RETRY;
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
+
     public class LocalBinder extends Binder {
         DistanceManager getService(){
             return DistanceManager.this;

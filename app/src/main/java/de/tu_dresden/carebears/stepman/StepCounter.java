@@ -142,6 +142,11 @@ public class StepCounter extends Service implements SensorHandler{
         return START_FLAG_RETRY;
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
+
     public class LocalBinder extends Binder {
         StepCounter getService(){
             return StepCounter.this;
