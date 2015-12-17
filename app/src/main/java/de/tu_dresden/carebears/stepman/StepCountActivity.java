@@ -1,6 +1,11 @@
 package de.tu_dresden.carebears.stepman;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -30,10 +35,10 @@ public class StepCountActivity extends AppCompatActivity {
             Toast.makeText(this, counter.getStatusMessage(), Toast.LENGTH_LONG).show();
         }
 
-        this.distanceManager = DistanceManager.getInstance(this);
-        if(!distanceManager.initialize()){
-            Toast.makeText(this, distanceManager.getStatusMessage(), Toast.LENGTH_LONG).show();
-        }
+
+
+        Intent intent = new Intent(this, DistanceManager.class);
+        bindService(intent, DistanceManagerCallback, Context.BIND_AUTO_CREATE);
 
         this.updateTimer = new Timer();
         this.updateTimer.schedule(new TimerTask() {
@@ -59,10 +64,12 @@ public class StepCountActivity extends AppCompatActivity {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                TextView text = (TextView) findViewById(R.id.text);
-                text.setText(   getString(R.string.distance) + ":\t" + distanceManager.getData() + " m\n" +
-                                getString(R.string.steps) + ":\t" + (int) counter.getData() + "\n" +
-                                getString(R.string.step_length) + ":\t" + distanceManager.getData() / counter.getData() + " m");
+                if (distanceManager != null && counter != null) {
+                    TextView text = (TextView) findViewById(R.id.text);
+                    text.setText(getString(R.string.distance) + ":\t" + distanceManager.getData() + " m\n" +
+                            getString(R.string.steps) + ":\t" + (int) counter.getData() + "\n" +
+                            getString(R.string.step_length) + ":\t" + distanceManager.getData() / counter.getData() + " m");
+                }
             }
         });
     }
@@ -103,4 +110,17 @@ public class StepCountActivity extends AppCompatActivity {
         this.initialized = state.getBoolean("Initialized");
         counter.setFirstSteps(state.getBoolean("FirstSteps"));
     }
+
+    private ServiceConnection DistanceManagerCallback = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            DistanceManager.LocalBinder mservice = (DistanceManager.LocalBinder) service;
+            StepCountActivity.this.distanceManager =  mservice.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 }

@@ -1,21 +1,27 @@
 package de.tu_dresden.carebears.stepman;
 
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.os.Binder;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 
 /**
  * Created by jan on 11.12.15.
  */
-public class DistanceManager implements SensorHandler{
+public class DistanceManager extends Service implements SensorHandler {
 
     private static DistanceManager instance;
-    private Context context;
+    private final IBinder mBinder = new LocalBinder();
 
     private LocationManager manager;
     private LocationListener listener;
@@ -29,16 +35,15 @@ public class DistanceManager implements SensorHandler{
     private float distance;
     private long timeBetween;
 
-    private DistanceManager(Context ctx) {
-        this.context = ctx;
+    public DistanceManager() {
+        super();
         this.initialized = false;
         this.distance = 0;
-        this.status = ctx.getString(R.string.sensor_not_initialized);
     }
 
-    public static DistanceManager getInstance(Context ctx) {
+    public static DistanceManager getInstance() {
         if(instance == null)
-            instance = new DistanceManager(ctx);
+            instance = new DistanceManager();
 
         return instance;
     }
@@ -48,13 +53,13 @@ public class DistanceManager implements SensorHandler{
             return true;
         }
 
-        manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         boolean gpsEnabled = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean networkEnabled = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
         if(!(gpsEnabled || networkEnabled)) {
-            status = context.getString(R.string.location_providers_offline);
+            status = Resources.getSystem().getString(R.string.location_providers_offline);
             return false;
         }
 
@@ -84,8 +89,8 @@ public class DistanceManager implements SensorHandler{
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         providerString = manager.getBestProvider(criteria, true);
 
-        if(context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
-            status = context.getString(R.string.missing_location_permission);
+        if(checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
+            status = Resources.getSystem().getString(R.string.missing_location_permission);
             return false;
         }
 
@@ -93,7 +98,7 @@ public class DistanceManager implements SensorHandler{
         manager.requestLocationUpdates(providerString, 0, 0, listener);
         lastLocation = manager.getLastKnownLocation(providerString);
 
-        status = context.getString(R.string.sensor_initialized);
+        status = Resources.getSystem().getString(R.string.sensor_initialized);
         initialized = true;
         return true;
     }
@@ -107,7 +112,7 @@ public class DistanceManager implements SensorHandler{
     public void close() {
         if(!initialized)
             return;
-        if(context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED)
+        if(checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED)
             manager.removeUpdates(listener);
         distance = 0.f;
         initialized = false;
@@ -134,5 +139,28 @@ public class DistanceManager implements SensorHandler{
 
     public void setDistance(float distance){
         this.distance = distance;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startID) {
+        this.status = getString(R.string.sensor_not_initialized);
+
+        if(initialize()) {
+            return START_STICKY;
+        }
+
+        return START_FLAG_RETRY;
+    }
+
+    public class LocalBinder extends Binder {
+        DistanceManager getService(){
+            return DistanceManager.this;
+        }
     }
 }
