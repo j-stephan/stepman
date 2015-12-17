@@ -9,14 +9,17 @@ import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class StepCountActivity extends AppCompatActivity {
     private Button resetButton;
+    private ToggleButton onOffButton;
     private StepCounter counter;
     private DistanceManager distanceManager;
     private Timer updateTimer;
@@ -30,15 +33,13 @@ public class StepCountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_count);
 
-        this.counter = StepCounter.getInstance(this);
-        if(!counter.initialize()) {
-            Toast.makeText(this, counter.getStatusMessage(), Toast.LENGTH_LONG).show();
-        }
+        Intent stepIntent = new Intent(this, StepCounter.class);
+        startService(stepIntent);
+        bindService(stepIntent, StepCounterCallback, Context.BIND_AUTO_CREATE);
 
-
-
-        Intent intent = new Intent(this, DistanceManager.class);
-        bindService(intent, DistanceManagerCallback, Context.BIND_AUTO_CREATE);
+        Intent distanceIntent = new Intent(this, DistanceManager.class);
+        startService(distanceIntent);
+        bindService(distanceIntent, DistanceManagerCallback, Context.BIND_AUTO_CREATE);
 
         this.updateTimer = new Timer();
         this.updateTimer.schedule(new TimerTask() {
@@ -56,6 +57,14 @@ public class StepCountActivity extends AppCompatActivity {
             public void onClick(View v) {
                 counter.reset();
                 distanceManager.reset();
+            }
+        });
+
+        this.onOffButton = (ToggleButton) findViewById(R.id.onOffButton);
+        onOffButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Toast.makeText(StepCountActivity.this, "button checked: " + onOffButton.isChecked(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -95,27 +104,32 @@ public class StepCountActivity extends AppCompatActivity {
     protected  void onSaveInstanceState(Bundle state)	{
         super.onSaveInstanceState(state);
 
-        state.putFloat("Distance", distanceManager.getData());
-        state.putInt("InitialSteps", counter.getInitialSteps());
-        state.putBoolean("FirstSteps", counter.getFirstSteps());
-        state.putBoolean("Initialized", this.initialized);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
 
-        distanceManager.setDistance(state.getFloat("Distance"));
-        counter.setInitialSteps(state.getInt("InitialSteps"));
-        this.initialized = state.getBoolean("Initialized");
-        counter.setFirstSteps(state.getBoolean("FirstSteps"));
     }
 
     private ServiceConnection DistanceManagerCallback = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            DistanceManager.LocalBinder mservice = (DistanceManager.LocalBinder) service;
-            StepCountActivity.this.distanceManager =  mservice.getService();
+            DistanceManager.LocalBinder mService = (DistanceManager.LocalBinder) service;
+            StepCountActivity.this.distanceManager =  mService.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    private ServiceConnection StepCounterCallback = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            StepCounter.LocalBinder mService = (StepCounter.LocalBinder) service;
+            StepCountActivity.this.counter = mService.getService();
         }
 
         @Override

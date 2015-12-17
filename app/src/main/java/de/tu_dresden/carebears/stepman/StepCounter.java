@@ -1,21 +1,26 @@
 package de.tu_dresden.carebears.stepman;
 
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Binder;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 
 /**
  * Created by jan on 09.12.15.
  */
-public class StepCounter implements SensorHandler{
+public class StepCounter extends Service implements SensorHandler{
 
     private static StepCounter instance;
+    private final IBinder mBinder = new LocalBinder();
 
     private SensorManager mSensorManager;
     private Sensor stepCounter;
-    private Context context;
     private StepListener stepListener;
 
     private boolean initialized;
@@ -24,16 +29,15 @@ public class StepCounter implements SensorHandler{
     private int initialSteps;
     private String status;
 
-    private StepCounter(Context ctx) {
-        this.context = ctx;
+    public StepCounter() {
+        super();
         this.steps = 0;
         this.initialized = false;
-        this.status = ctx.getString(R.string.sensor_not_initialized);
     }
 
-    public static StepCounter getInstance(Context ctx) {
+    public static StepCounter getInstance() {
         if(instance == null) {
-            instance = new StepCounter(ctx);
+            instance = new StepCounter();
         }
 
         return instance;
@@ -44,7 +48,7 @@ public class StepCounter implements SensorHandler{
     }
 
     public boolean initialize() {
-        mSensorManager = (SensorManager) this.context.getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         stepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         this.stepListener = new StepListener();
 
@@ -52,15 +56,15 @@ public class StepCounter implements SensorHandler{
 
         if (stepCounter != null) {
             if(!mSensorManager.registerListener(stepListener,stepCounter,  SensorManager.SENSOR_DELAY_NORMAL)) {
-                status = context.getString(R.string.init_step_sensor_fail);
+                status = getString(R.string.init_step_sensor_fail);
                 return false;
             }
-            status = context.getString(R.string.sensor_initialized);
+            status = getString(R.string.sensor_initialized);
             this.initialized = true;
             return true;
         }
 
-        status = context.getString(R.string.init_step_sensor_fail);
+        status = getString(R.string.init_step_sensor_fail);
         return false;
     }
 
@@ -96,7 +100,7 @@ public class StepCounter implements SensorHandler{
                 initialSteps = Math.round(event.values[0]);
                 firstSteps = false;
             }
-            instance.setSteps(Math.round(event.values[0]));
+            setSteps(Math.round(event.values[0]));
         }
 
         @Override
@@ -119,5 +123,28 @@ public class StepCounter implements SensorHandler{
 
     public void setFirstSteps(boolean firstSteps) {
         this.firstSteps = firstSteps;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startID) {
+        this.status = getString(R.string.sensor_not_initialized);
+
+        if(initialize()) {
+            return START_STICKY;
+        }
+
+        return START_FLAG_RETRY;
+    }
+
+    public class LocalBinder extends Binder {
+        StepCounter getService(){
+            return StepCounter.this;
+        }
     }
 }

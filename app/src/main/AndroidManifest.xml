@@ -9,6 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".DistanceManager" />
+        <service android:name=".StepCounter" />
         <activity android:name=".StepCountActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

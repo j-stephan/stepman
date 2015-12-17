@@ -98,7 +98,7 @@ public class DistanceManager extends Service implements SensorHandler {
         manager.requestLocationUpdates(providerString, 0, 0, listener);
         lastLocation = manager.getLastKnownLocation(providerString);
 
-        status = Resources.getSystem().getString(R.string.sensor_initialized);
+        status = getString(R.string.sensor_initialized);
         initialized = true;
         return true;
     }
